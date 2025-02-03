@@ -1,23 +1,7 @@
-import pandas as pd
 import psycopg2
+import csv
 
-pd.set_option('future.no_silent_downcasting', True)
-
-csv_to_df = pd.read_csv('./data/TA_PRECO_MEDICAMENTO.csv', 
-                        quotechar='"',
-                        delimiter=';',
-                        encoding="ISO-8859-1", 
-                        dtype=str,
-                        low_memory=False
-                        )
-
-df_comma_to_dot = csv_to_df.stack().str.replace(',', '.').unstack()
-df_final = df_comma_to_dot.fillna(value=0)
-
-#print(csv_to_df[['CÓDIGO GGREM']].to_string) #Printar dados da coluna selecionada com header
-#print(csv_to_df.dtypes)
-#print(df_final[['PF 12%']].to_string)
-
+from model import MedicamentoModel as model
 
 conn = psycopg2.connect(dbname="postgres", user="postgres", password="postgres")
 cur = conn.cursor()
@@ -64,6 +48,7 @@ cur.execute('''CREATE TABLE IF NOT EXISTS medicamento (
                           comercializado_2020 varchar(10), 
                           tarja varchar(50)
                           );''')
+conn.commit()
 
 query_insert = """ insert into medicamento (
                          substancia, cnpj, laboratorio, codigo_ggrem, registro,
@@ -82,18 +67,34 @@ query_insert = """ insert into medicamento (
 					   );
                 """
 
-# for col in df_final.columns:
-#     df_final[col] = df_final[col].astype(str)  # Converter tudo para string
-#     max_len = df_final[col].str.len().max()
-#     if max_len > 255:
-#         print(f"Coluna '{col}' tem um valor com {max_len} caracteres!")
+medicamento_model = model.MedicamentoModel()
 
-data = [tuple(row) for row in df_final.itertuples(index=False, name=None)]
+def parse_decimal(value):
+    if value is None or value.strip() == "" or not any(char.isdigit() for char in value):
+        return None  # Retorna None se estiver vazio ou não tiver números
 
-print(df_final.loc[3260, 'ANÁLISE RECURSAL'])
+    try:
+        return float(value.replace(',', '.'))
+    except ValueError:
+        return None  # Retorna None se não conseguir converter
 
-cur.executemany(query_insert, data)
 
-conn.commit()
-#cur.close()
-#conn.close()
+with open('./data/TA_PRECO_MEDICAMENTO.csv', newline='', encoding="ISO-8859-1") as csvfile:
+    spamreader = csv.reader(csvfile, delimiter=';', quotechar='"')
+    next(spamreader)
+    # primeira_linha = next(spamreader) 
+    # seg = next(spamreader) # Lê a primeira linha de dados
+    # print(seg)
+    
+    for row in spamreader:
+        #print(f"Número de colunas lidas: {len(row)}")  # Deve ser 40
+
+        numeric_fields = [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 
+                          23, 24, 25, 26, 27, 28, 29, 30, 31]
+        
+        # Converte apenas os valores numéricos
+        for index in numeric_fields:
+            row[index] = parse_decimal(row[index])
+
+
+        medicamento_model.insert_into_table(*row)
