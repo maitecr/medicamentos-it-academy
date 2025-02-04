@@ -27,3 +27,18 @@ class MedicamentoModel(db.Database):
         self._db.cur.execute(_query, columns)
 
         self._db.conn.commit()
+
+    def select_by_product_name(self, product_name):
+        _query_select = """SELECT produto, pf_sem_imposto, apresentacao FROM medicamento
+                         WHERE produto ILIKE %s 
+                         AND comercializado_2020 = 'Sim';"""
+        
+        _search_product_by_name = product_name
+
+        _binding_params = ('%' + _search_product_by_name + '%',)
+
+        self._db.cur.execute(_query_select, _binding_params)
+        
+        _results = self._db.cur.fetchall()
+
+        return _results

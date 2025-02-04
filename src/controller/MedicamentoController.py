@@ -5,6 +5,7 @@ import csv
 
 class MedicamentoController(db.Database):
     def __init__(self):
+        super().__init__()
         self._db = db.Database()
         self._medicamento_model = model.MedicamentoModel()
 
@@ -32,7 +33,6 @@ class MedicamentoController(db.Database):
         except ValueError:
             return None 
 
-
     def create_from_csv(self, file_path):
         with open(file_path, newline='', encoding="ISO-8859-1") as csvfile:
             reader = csv.reader(csvfile, delimiter=';', quotechar='"')
@@ -49,4 +49,9 @@ class MedicamentoController(db.Database):
                 
                 self._medicamento_model.insert_into_table(*row)
 
+    def get_product_by_name(self, product_name):
+        _results = self._medicamento_model.select_by_product_name(product_name)
+
+        for r in _results:
+            print(r)
 
