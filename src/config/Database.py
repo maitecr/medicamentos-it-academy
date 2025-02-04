@@ -54,31 +54,10 @@ class Database:
                                 cap varchar(10), 
                                 confaz_87 varchar(10), 
                                 icms_0 varchar(10), 
-                                analise_recursal varchar(5), 
+                                analise_recursal integer, 
                                 lista_de_concessa_de_credito_tributario varchar(10), 
                                 comercializado_2020 varchar(10), 
                                 tarja varchar(50)
                                 );''')
-        self.conn.commit()
-
-    def insert_into_table(self, data):
-        _query = """ insert into medicamento (
-                         substancia, cnpj, laboratorio, codigo_ggrem, registro,
-                         ean_1, ean_2, ean_3, produto, apresentacao, classe_terapeutica, 
-                         tipo_de_produto_status, regime_de_preco, pf_sem_imposto, pf_0, 
-                         pf_12, pf_17, pf_17_alc, pf_17_5, pf_17_5_alc, pf_18, pf_18_alc, 
-                         pf_20, pmc_0, pmc_12, pmc_17, pmc_17_alc, pmc_17_5, pmc_17_5_alc, 
-                         pmc_18, pmc_18_alc, pmc_20, restricao_hospitalar, cap, confaz_87, 
-                         icms_0, analise_recursal, lista_de_concessa_de_credito_tributario, 
-                         comercializado_2020, tarja
-						)
-				values (
-	                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 
-                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 
-                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
-					   );
-                """
-        
-        self.cur.executemany(_query, data)
         self.conn.commit()
 

@@ -71,12 +71,12 @@ medicamento_model = model.MedicamentoModel()
 
 def parse_decimal(value):
     if value is None or value.strip() == "" or not any(char.isdigit() for char in value):
-        return None  # Retorna None se estiver vazio ou não tiver números
+        return None  
 
     try:
         return float(value.replace(',', '.'))
     except ValueError:
-        return None  # Retorna None se não conseguir converter
+        return None 
 
 
 with open('./data/TA_PRECO_MEDICAMENTO.csv', newline='', encoding="ISO-8859-1") as csvfile:
@@ -95,6 +95,5 @@ with open('./data/TA_PRECO_MEDICAMENTO.csv', newline='', encoding="ISO-8859-1") 
         # Converte apenas os valores numéricos
         for index in numeric_fields:
             row[index] = parse_decimal(row[index])
-
 
         medicamento_model.insert_into_table(*row)

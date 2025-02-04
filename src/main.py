@@ -7,4 +7,4 @@ db_connect.create_table()
 
 controller = contr.MedicamentoController()
 
-controller.csv_to_database('./data/TA_PRECO_MEDICAMENTO.csv')
+controller.create_from_csv('./data/TA_PRECO_MEDICAMENTO.csv')

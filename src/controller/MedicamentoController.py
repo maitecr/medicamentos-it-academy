@@ -1,24 +1,52 @@
 import config.Database as db
+import model.MedicamentoModel as model
+import csv
 
-import pandas as pd
 
 class MedicamentoController(db.Database):
     def __init__(self):
         self._db = db.Database()
+        self._medicamento_model = model.MedicamentoModel()
 
 
-    def csv_to_database(self, file_path):
-        _csv_to_df = pd.read_csv(file_path, 
-                        quotechar='"',
-                        delimiter=';',
-                        encoding="ISO-8859-1", 
-                        dtype=str,
-                        low_memory=False
-                        )
+    def parse_decimal(self, value):
+        if value is None or value.strip() == "" or not any(char.isdigit() for char in value):
+            return None  
 
-        _df_comma_to_dot = _csv_to_df.stack().str.replace(',', '.').unstack()
-        _df_final = _df_comma_to_dot.fillna(value=0)
+        try:
+            return float(value.replace(',', '.'))
+        except ValueError:
+            return None 
 
-        _data = [tuple(row) for row in _df_final.itertuples(index=False, name=None)]
+    def parse_negative(self, value):
+        if value is None or value.strip() == "" or not any(char.isdigit() for char in value):
+            return None  
 
-        self._db.insert_into_table(_data)
+        try:
+            # Remove espaços e verifica se o número está entre parênteses
+            value = value.strip()
+            if value.startswith('(') and value.endswith(')'):
+                value = '-' + value[1:-1]  # Remove parênteses e adiciona o sinal negativo
+
+            return float(value.replace(',', '.'))
+        except ValueError:
+            return None 
+
+
+    def create_from_csv(self, file_path):
+        with open(file_path, newline='', encoding="ISO-8859-1") as csvfile:
+            reader = csv.reader(csvfile, delimiter=';', quotechar='"')
+            next(reader)
+
+            for row in reader:
+                row[36] = self.parse_negative(row[36])
+
+                column_numbers = [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 
+                          23, 24, 25, 26, 27, 28, 29, 30, 31]
+                
+                for c in column_numbers:
+                    row[c] = self.parse_decimal(row[c])
+                
+                self._medicamento_model.insert_into_table(*row)
+
+
