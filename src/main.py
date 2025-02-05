@@ -12,3 +12,5 @@ controller = contr.MedicamentoController()
 #controller.get_product_by_name('max')
 
 #controller.read_product_by_code('7896210500354')
+
+#controller.read_percentual_lista_de_concessao_de_credito_tributario()

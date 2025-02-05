@@ -56,3 +56,17 @@ class MedicamentoModel(db.Database):
         _results = self._db.cur.fetchall()
 
         return _results
+
+    def get_percentual_lista_de_concessao_de_credito_tributario(self):
+        _query_select = """ SELECT lista_de_concessao_de_credito_tributario, 
+                                   COUNT(lista_de_concessao_de_credito_tributario) as total , 
+                                   count(*) * 100.0 / (select count(*) from medicamento) as percentual
+                            FROM medicamento 
+                            WHERE comercializado_2020 = 'Sim'
+                            GROUP BY lista_de_concessao_de_credito_tributario ;"""
+        
+        self._db.cur.execute(_query_select)
+
+        _results = self._db.cur.fetchall()
+
+        return _results

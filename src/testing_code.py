@@ -99,14 +99,16 @@ medicamento_model = model.MedicamentoModel()
 
 #         medicamento_model.insert_into_table(*row)
 
-query_select = """ SELECT produto, max(pmc_0), min(pmc_0), max(pmc_0) - min(pmc_0) AS result 
+query_select = """ SELECT lista_de_concessao_de_credito_tributario, 
+                          COUNT(lista_de_concessao_de_credito_tributario) as total , 
+                          count(*) * 100.0 / (select count(*) from medicamento) as percentual
                     FROM medicamento 
-                    WHERE ean_1 = %s
-                    GROUP BY produto;"""
+                    WHERE comercializado_2020 = 'Sim'
+                    GROUP BY lista_de_concessao_de_credito_tributario ;"""
 
 sarch_ean_1 = ('789667642',)
 
-cur.execute(query_select, sarch_ean_1)
+cur.execute(query_select)
 
 resultados = cur.fetchall()
 

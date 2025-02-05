@@ -61,3 +61,8 @@ class MedicamentoController(db.Database):
         for r in _results:
             print(r)
 
+    def read_percentual_lista_de_concessao_de_credito_tributario(self):
+        _results = self._medicamento_model.get_percentual_lista_de_concessao_de_credito_tributario()
+
+        for r in _results:
+            print(r)
