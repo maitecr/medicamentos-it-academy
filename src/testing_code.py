@@ -99,11 +99,14 @@ medicamento_model = model.MedicamentoModel()
 
 #         medicamento_model.insert_into_table(*row)
 
-query_select = "SELECT produto, pf_sem_imposto, apresentacao FROM medicamento WHERE produto ILIKE %s AND comercializado_2020 = 'Sim';"
-search_name = 'max'
-binding_param = ('%' + search_name + '%',)
-#print(type(binding_param))
-cur.execute(query_select, binding_param)
+query_select = """ SELECT produto, max(pmc_0), min(pmc_0), max(pmc_0) - min(pmc_0) AS result 
+                    FROM medicamento 
+                    WHERE ean_1 = %s
+                    GROUP BY produto;"""
+
+sarch_ean_1 = ('789667642',)
+
+cur.execute(query_select, sarch_ean_1)
 
 resultados = cur.fetchall()
 

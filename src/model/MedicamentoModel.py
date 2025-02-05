@@ -6,7 +6,7 @@ class MedicamentoModel(db.Database):
         super().__init__()
         self._db = db.Database() 
 
-    def insert_into_table(self, *columns):
+    def post_from_csv(self, *columns):
 
         _query = """ insert into medicamento (
                          substancia, cnpj, laboratorio, codigo_ggrem, registro,
@@ -15,7 +15,7 @@ class MedicamentoModel(db.Database):
                          pf_12, pf_17, pf_17_alc, pf_17_5, pf_17_5_alc, pf_18, pf_18_alc, 
                          pf_20, pmc_0, pmc_12, pmc_17, pmc_17_alc, pmc_17_5, pmc_17_5_alc, 
                          pmc_18, pmc_18_alc, pmc_20, restricao_hospitalar, cap, confaz_87, 
-                         icms_0, analise_recursal, lista_de_concessa_de_credito_tributario, 
+                         icms_0, analise_recursal, lista_de_concessao_de_credito_tributario, 
                          comercializado_2020, tarja
 						)
 				values (
@@ -28,7 +28,7 @@ class MedicamentoModel(db.Database):
 
         self._db.conn.commit()
 
-    def select_by_product_name(self, product_name):
+    def get_product_by_name(self, product_name):
         _query_select = """SELECT produto, pf_sem_imposto, apresentacao FROM medicamento
                          WHERE produto ILIKE %s 
                          AND comercializado_2020 = 'Sim';"""
@@ -39,6 +39,20 @@ class MedicamentoModel(db.Database):
 
         self._db.cur.execute(_query_select, _binding_params)
         
+        _results = self._db.cur.fetchall()
+
+        return _results
+
+    def get_product_by_code(self, code) :
+        _query_select = """ SELECT produto, max(pmc_0), min(pmc_0), max(pmc_0) - min(pmc_0) AS result 
+                    FROM medicamento 
+                    WHERE ean_1 = %s
+                    GROUP BY produto;"""
+
+        _binding_params = (code,)
+
+        self._db.cur.execute(_query_select, _binding_params)
+
         _results = self._db.cur.fetchall()
 
         return _results

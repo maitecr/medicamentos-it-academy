@@ -55,7 +55,7 @@ class Database:
                                 confaz_87 varchar(10), 
                                 icms_0 varchar(10), 
                                 analise_recursal integer, 
-                                lista_de_concessa_de_credito_tributario varchar(10), 
+                                lista_de_concessao_de_credito_tributario varchar(10), 
                                 comercializado_2020 varchar(10), 
                                 tarja varchar(50)
                                 );''')

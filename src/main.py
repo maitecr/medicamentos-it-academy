@@ -11,3 +11,4 @@ controller = contr.MedicamentoController()
 
 #controller.get_product_by_name('max')
 
+#controller.read_product_by_code('7896210500354')

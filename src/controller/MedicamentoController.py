@@ -47,10 +47,16 @@ class MedicamentoController(db.Database):
                 for c in column_numbers:
                     row[c] = self.parse_decimal(row[c])
                 
-                self._medicamento_model.insert_into_table(*row)
+                self._medicamento_model.post_from_csv(*row)
 
-    def get_product_by_name(self, product_name):
-        _results = self._medicamento_model.select_by_product_name(product_name)
+    def read_product_by_name(self, product_name):
+        _results = self._medicamento_model.get_product_by_name(product_name)
+
+        for r in _results:
+            print(r)
+        
+    def read_product_by_code(self, code):
+        _results = self._medicamento_model.get_product_by_code(code)
 
         for r in _results:
             print(r)
