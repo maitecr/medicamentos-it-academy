@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from csv_app.views import medicamento_upload
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('upload-csv/', medicamento_upload, name="medicamento_upload"),
 ]
