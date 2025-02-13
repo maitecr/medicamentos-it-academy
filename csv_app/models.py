@@ -42,3 +42,5 @@ class Medicamento(models.Model):
     comercializado_2020 = models.CharField(max_length=10, default='Não')
     tarja = models.CharField(max_length=50)
 
+
+    

@@ -26,9 +26,13 @@ def parse_negative(value):
     except ValueError:
         return None
 
+def home(request):
+    template = "index.html"
+
+    return render(request, template)
 
 def medicamento_upload(request):
-    template = "medicamento_upload.html"
+    template = "medicamento_csv_upload.html"
     
     if request.method == 'GET':
         return render(request, template)
