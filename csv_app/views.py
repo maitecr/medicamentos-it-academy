@@ -32,7 +32,7 @@ def home(request):
     return render(request, template)
 
 def medicamento_upload(request):
-    template = "medicamento_csv_upload.html"
+    template = "csv_app/medicamento_csv_upload.html"
     
     if request.method == 'GET':
         return render(request, template)
