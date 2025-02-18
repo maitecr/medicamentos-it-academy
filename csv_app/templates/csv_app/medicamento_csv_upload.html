@@ -1,6 +1,6 @@
 {% extends 'csv_app/base.html'%}
 {% block content %}
-
+<h1>Importar Arquivo CSV</h1>
 {% if messages %}
     {% for message in messages %}
         <div>
@@ -13,10 +13,10 @@
 {{order}}
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <label>Upload csv</label>
+    <label></label>
     <input type="file" name="file">
-    <p>Only csv files</p>
-    <button type="submit">Upload</button>
+    <p>Apenas arquivos com extensão ".csv"</p>
+    <button type="submit">Enviar</button>
 </form>
 {% endif %}
 
