@@ -12,10 +12,10 @@
     {% endfor %}
 {% else %}
 {{order}}
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" onsubmit="showLoading()">
     {% csrf_token %}
-    <label></label>
-    <input type="file" name="file">
+    <label for="file-upload" class="custom-file-upload">Carregar arquivo ".csv"</label>
+    <input id="file-upload" type="file" name="file">
     <p>Apenas arquivos com extensão ".csv"</p>
     <button type="submit">Enviar</button>
 </form>
